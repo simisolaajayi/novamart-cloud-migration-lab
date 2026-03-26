@@ -392,16 +392,18 @@ That is what companies are looking for in interviews — and that is what this e
 
 ### Team Roles
 
-Assign these roles within your team. Every member should understand *all* phases, but each role leads the discussion for their area:
+Assign these roles within your team of 7. Every member should understand *all* phases, but each role leads the discussion for their area:
 
-| Role | Leads Discussion On | Key Questions They Must Answer |
-|------|---------------------|-------------------------------|
-| **Cloud Architect** | VPC design, subnets, security groups, overall architecture | "Why is the architecture designed this way? What are the trade-offs?" |
-| **DevOps Engineer** | Terraform, EC2, EKS, deployment process | "How does the infrastructure get created? How do we deploy changes?" |
-| **Database Engineer** | SQLite → RDS migration, data integrity, backups | "How did we migrate the data? What happens if the database goes down?" |
-| **QA / Reliability Lead** | Testing, health checks, auto-scaling, disaster recovery | "How do we know the system is working? What happens when things fail?" |
+| Role | People | Leads Discussion On | Key Questions They Must Answer |
+|------|--------|---------------------|-------------------------------|
+| **Cloud Architect** | 1 | VPC design, subnets, security groups, overall architecture | "Why is the architecture designed this way? What are the trade-offs?" |
+| **DevOps Engineer** | 2 | Terraform, EC2, EKS, deployment process | "How does the infrastructure get created? How do we deploy changes?" |
+| **Database Engineer** | 1 | SQLite → RDS migration, data integrity, backups | "How did we migrate the data? What happens if the database goes down?" |
+| **Security Engineer** | 1 | Security groups, IAM, container hardening, secrets management | "How is each layer secured? Where are the attack surfaces?" |
+| **QA / Reliability Lead** | 1 | Testing, health checks, auto-scaling, disaster recovery | "How do we know the system is working? What happens when things fail?" |
+| **Project Lead** | 1 | Presentation coordination, cost analysis, stakeholder communication | "What is the business case? What are the costs and timelines?" |
 
-> **Teams of 3:** Combine the Database Engineer and QA Lead roles.
+> The **Project Lead** ensures everyone is prepared and delivers the opening and closing of the presentation. The two **DevOps Engineers** split work — one handles Phase 1-2 (EC2, ALB), the other handles Phase 3 (Docker, EKS). Every team member must be ready to answer questions about any phase.
 
 ---
 
@@ -484,7 +486,7 @@ Prepare for these — they are the same questions that come up in real cloud eng
 | "Which phase gave NovaMart the most value for the least effort?" | Cost-benefit analysis |
 | "A new developer joins the team. How would you onboard them to understand this infrastructure?" | Documentation, IaC readability, team processes |
 | "The CTO wants to add a second application (e-commerce storefront) to this infrastructure. What would you change?" | Multi-service architecture thinking |
-| "How would you set up CI/CD so that a git push automatically deploys to EKS?" | Awareness of the deployment pipeline gap — bridges to the CI/CD lab |
+| "How would you set up CI/CD so that a git push automatically deploys to EKS?" | Awareness of the deployment pipeline gap — bridges to the [CI/CD lab](https://github.com/anmutetech/healthcare-cicd-lab) |
 
 ---
 
@@ -544,10 +546,12 @@ docker compose down -v
 
 Once you have completed this migration lab, explore these related labs to continue building your cloud skills:
 
-- **CI/CD Pipelines** -- Automate testing and deployment with GitHub Actions
-- **Container Security** -- Scan images for vulnerabilities and enforce policies
-- **GitOps with ArgoCD** -- Manage Kubernetes deployments declaratively from Git
-- **Logging and Observability** -- Add centralized logging, metrics, and alerting
+- [**Healthcare CI/CD Pipeline**](https://github.com/anmutetech/healthcare-cicd-lab) -- Automate testing and deployment with GitHub Actions
+- [**Container Security Scanning**](https://github.com/anmutetech/container-security-lab) -- Scan images for vulnerabilities and enforce policies
+- [**GitOps with ArgoCD**](https://github.com/anmutetech/gitops-argocd-lab) -- Manage Kubernetes deployments declaratively from Git
+- [**Logging and Observability**](https://github.com/anmutetech/logging-observability-lab) -- Add centralized logging, metrics, and alerting
+- [**Healthcare DevSecOps**](https://github.com/anmutetech/healthcare-devsecops-lab) -- Embed security gates into the CI/CD pipeline
+- [**MLOps Pipeline**](https://github.com/anmutetech/mlops-pipeline-lab) -- Deploy ML models with CI/CD and Prometheus monitoring
 
 ---
 
