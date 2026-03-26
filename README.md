@@ -368,6 +368,151 @@ NovaMart has a production-grade, auto-scaling, self-healing system. The Black Fr
 
 ---
 
+## Collaborative Project: Team Deployment and Presentation
+
+This lab is designed as a **team project**. Each team will fork the repo, deploy all 3 phases to AWS, and then present their migration to the class — explaining every decision as if they are in a real migration planning meeting with stakeholders.
+
+The code is provided. **The real test is whether you can explain it.**
+
+Anyone can run `terraform apply`. But can you explain to the CTO *why* the database is in a private subnet? Can you tell the security team *why* the container runs as a non-root user? Can you walk a new team member through a request from the customer's browser all the way to the database and back?
+
+That is what companies are looking for in interviews — and that is what this exercise builds.
+
+---
+
+### How It Works
+
+1. **Form teams** of 3-4 people
+2. **Fork this repo** — each team works from their own copy
+3. **Deploy all 3 phases** to your team's AWS environment
+4. **Prepare a 15-minute presentation** answering the questions below
+5. **Present to the class** — the instructor and other teams will ask follow-up questions
+
+---
+
+### Team Roles
+
+Assign these roles within your team. Every member should understand *all* phases, but each role leads the discussion for their area:
+
+| Role | Leads Discussion On | Key Questions They Must Answer |
+|------|---------------------|-------------------------------|
+| **Cloud Architect** | VPC design, subnets, security groups, overall architecture | "Why is the architecture designed this way? What are the trade-offs?" |
+| **DevOps Engineer** | Terraform, EC2, EKS, deployment process | "How does the infrastructure get created? How do we deploy changes?" |
+| **Database Engineer** | SQLite → RDS migration, data integrity, backups | "How did we migrate the data? What happens if the database goes down?" |
+| **QA / Reliability Lead** | Testing, health checks, auto-scaling, disaster recovery | "How do we know the system is working? What happens when things fail?" |
+
+> **Teams of 3:** Combine the Database Engineer and QA Lead roles.
+
+---
+
+### Presentation Structure (15 Minutes)
+
+Your presentation should cover these sections:
+
+#### 1. Architecture Walkthrough (5 minutes)
+
+Draw or present the architecture for each phase. For each phase, trace a request from a customer's browser to the database and back. Show:
+- Which components the request passes through
+- Where traffic is encrypted
+- Where authentication/authorization happens
+- What happens if any single component fails
+
+#### 2. Migration Decisions (5 minutes)
+
+Explain the *why* behind key decisions:
+- Why did we start with lift-and-shift instead of jumping to Kubernetes?
+- Why PostgreSQL instead of keeping SQLite?
+- Why is the ALB in a public subnet but the app servers are behind it?
+- Why does the Dockerfile use Alpine instead of the full Node image?
+- Why `runAsNonRoot` and `readOnlyRootFilesystem` in the Kubernetes deployment?
+
+#### 3. Cost and Trade-offs (3 minutes)
+
+Present a comparison:
+- Estimated monthly cost for each phase
+- What you gain at each phase vs. the added complexity
+- Which phase gives the most value for the least effort?
+- If NovaMart had a tight budget, where would you stop?
+
+#### 4. What Would You Do Differently? (2 minutes)
+
+Reflect on the migration:
+- What would you change about this migration path?
+- What is missing that a real production system would need?
+- What would Phase 4 look like?
+
+---
+
+### Questions the Instructor Will Ask
+
+Prepare for these — they are the same questions that come up in real cloud engineering interviews:
+
+#### Phase 1: Rehost
+
+| Question | What It Tests |
+|----------|--------------|
+| "Your EC2 instance just terminated at 2 AM. What happens to the data? What is the recovery process?" | Understanding of EBS, snapshots, and single points of failure |
+| "The security group allows SSH from 0.0.0.0/0. Is that acceptable? What would you do in production?" | Security awareness — restricting SSH to specific IPs or using Session Manager |
+| "The CEO asks for the rollback plan. If AWS does not work out, how do we go back to on-prem?" | Migration risk management |
+| "How would you monitor this EC2 instance to know if it is healthy?" | Awareness of CloudWatch, health checks, alerting |
+
+#### Phase 2: Re-Platform
+
+| Question | What It Tests |
+|----------|--------------|
+| "Walk me through a request from a customer's browser to the database and back. Name every component it passes through." | End-to-end architecture understanding |
+| "Why can't the internet reach the database directly? Show me exactly where that is enforced." | Security group chain comprehension |
+| "It is Black Friday and traffic is 10x normal. One EC2 instance goes down. Walk me through what happens." | Understanding of ALB health checks, ASG, and RDS failover |
+| "The database password is in the Terraform variables. Is that secure? What would you do instead?" | Secrets management awareness (AWS Secrets Manager, Parameter Store) |
+| "Why did we move from SQLite to PostgreSQL? What specific problems does that solve?" | Database scaling knowledge — concurrent writes, network access, replication |
+
+#### Phase 3: Re-Architect
+
+| Question | What It Tests |
+|----------|--------------|
+| "What does `readOnlyRootFilesystem: true` do and why does it matter?" | Container security understanding |
+| "The HPA is set to scale at 70% CPU. Why not 90%? Why not 50%?" | Understanding of scaling thresholds — headroom for traffic spikes |
+| "I just deployed a broken container image. What happens? How does Kubernetes handle this?" | Rolling update strategy, readiness probes, rollback |
+| "You have 10 pods running but the app is still slow. The CPU is at 30%. What is the bottleneck?" | Troubleshooting skills — database connections, network, memory, I/O |
+| "What is the difference between a readiness probe and a liveness probe? Why do we need both?" | Kubernetes health check concepts |
+
+#### Cross-Phase Questions
+
+| Question | What It Tests |
+|----------|--------------|
+| "If you had to do this migration at a real company, would you skip Phase 1? Why or why not?" | Strategic thinking about migration risk |
+| "Which phase gave NovaMart the most value for the least effort?" | Cost-benefit analysis |
+| "A new developer joins the team. How would you onboard them to understand this infrastructure?" | Documentation, IaC readability, team processes |
+| "The CTO wants to add a second application (e-commerce storefront) to this infrastructure. What would you change?" | Multi-service architecture thinking |
+| "How would you set up CI/CD so that a git push automatically deploys to EKS?" | Awareness of the deployment pipeline gap — bridges to the CI/CD lab |
+
+---
+
+### Evaluation Criteria
+
+Teams are not graded on whether the deployment works — they are evaluated on whether they can **explain and defend their architecture**:
+
+| Criteria | What We Are Looking For |
+|----------|------------------------|
+| **Understanding** | Can every team member explain what each component does and why it exists? |
+| **Communication** | Can they explain technical concepts clearly to a non-technical audience? |
+| **Troubleshooting** | When asked "what happens if X fails?", can they trace through the system logically? |
+| **Security Awareness** | Do they understand the security implications of each design choice? |
+| **Cost Awareness** | Can they discuss trade-offs between cost, complexity, and reliability? |
+| **Teamwork** | Did all members contribute? Can any member answer questions about any phase? |
+
+---
+
+### Tips for a Strong Presentation
+
+1. **Draw your own diagrams.** Do not just show the ASCII diagrams from this README. Draw them on a whiteboard or in draw.io to prove you understand the architecture.
+2. **Use the actual AWS console.** Show the running resources — the VPC, subnets, security groups, RDS instance, EKS pods. A live demo is more convincing than slides.
+3. **Prepare for "what if" questions.** The strongest teams can answer questions about failure scenarios, scaling limits, and security threats.
+4. **Admit what you do not know.** In real interviews and real jobs, "I am not sure, but I would investigate by checking X" is a better answer than guessing.
+5. **Connect it to the business.** Remember — NovaMart is a retail chain. Frame your decisions in terms of uptime, customer impact, and cost, not just technical specs.
+
+---
+
 ## Cleanup
 
 When you are finished with the lab, tear down resources in reverse order to avoid dependency errors:
