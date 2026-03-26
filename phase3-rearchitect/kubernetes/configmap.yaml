@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: novamart-config
+  namespace: novamart-ns
+data:
+  ENVIRONMENT: "aws-eks"
+  PORT: "3000"
+  # Database connection — update these with your RDS details from Phase 2
+  # If running standalone without RDS, the app falls back to SQLite
+  DB_HOST: "<your-rds-endpoint>"
+  DB_PORT: "5432"
+  DB_NAME: "novamart"

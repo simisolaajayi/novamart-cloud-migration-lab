@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: novamart-inventory
+  namespace: novamart-ns
+  labels:
+    app: novamart
+    component: inventory-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: novamart
+  template:
+    metadata:
+      labels:
+        app: novamart
+        component: inventory-api
+    spec:
+      containers:
+        - name: novamart-inventory
+          # TODO: Replace with your DockerHub username
+          image: <your-dockerhub-username>/novamart-inventory:latest
+          ports:
+            - containerPort: 3000
+              name: http
+          envFrom:
+            - configMapRef:
+                name: novamart-config
+            - secretRef:
+                name: novamart-db-secret
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+            - name: data
+              mountPath: /app/data
+      volumes:
+        - name: tmp
+          emptyDir: {}
+        - name: data
+          emptyDir: {}

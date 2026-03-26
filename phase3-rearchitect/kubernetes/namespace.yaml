@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: novamart-ns
+  labels:
+    app: novamart
+    project: cloud-migration
+    phase: rearchitect

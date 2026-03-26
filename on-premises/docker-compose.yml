@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  novamart-app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - ENVIRONMENT=on-premises
+      - PORT=3000
+    volumes:
+      - inventory-data:/app/data
+    restart: unless-stopped
+
+volumes:
+  inventory-data:
