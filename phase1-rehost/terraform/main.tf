@@ -93,7 +93,7 @@ resource "aws_instance" "novamart_app" {
   user_data              = file("${path.module}/../scripts/userdata.sh")
 
   root_block_device {
-    volume_size = 20
+    volume_size = 30
     volume_type = "gp3"
     encrypted   = true
   }
