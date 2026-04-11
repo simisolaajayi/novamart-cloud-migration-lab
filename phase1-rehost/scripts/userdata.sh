@@ -42,7 +42,7 @@ dnf install -y git
 # IMPORTANT: Replace this URL with your actual repository URL!
 # If your repo is private, you will need to configure authentication.
 echo ">>> Cloning application repository..."
-REPO_URL="https://github.com/YOUR_USERNAME/cloud-migration-lab.git"
+REPO_URL="https://github.com/simisolaajayi/novamart-cloud-migration-lab.git"
 APP_DIR="/opt/novamart"
 
 git clone "$REPO_URL" "$APP_DIR" || {
